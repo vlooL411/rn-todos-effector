@@ -1,13 +1,13 @@
 import {useStore} from 'effector-react';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
 } from 'react-native';
-import Todo, {AddTodo} from '../Todo';
 import Categories from '../Categories';
+import Todo, {AddTodo} from '../Todo';
 import TodosHeader from './Header';
 import {
   $todosCategories,
