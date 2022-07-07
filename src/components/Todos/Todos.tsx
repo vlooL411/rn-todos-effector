@@ -24,14 +24,14 @@ const Todos = () => {
   const onAddTodo = useCallback(() => {
     todosAdd({
       id: `${Math.random()}`,
-      title: `${Math.random()}`,
+      title: '',
       categories: todosCategories.filter(c => c),
       completed: false,
     });
   }, [todosCategories]);
 
   const visibleTodos = useList($visibleTodos, (item, index) => {
-    return <Todo key={item.id} {...item} index={index} onFocus={() => {}} />;
+    return <Todo {...item} index={index} onFocus={() => {}} />;
   });
 
   return (
