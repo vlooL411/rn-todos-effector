@@ -1,9 +1,8 @@
-import {useStore} from 'effector-react';
-import React, {useCallback, useRef} from 'react';
+import {useList, useStore} from 'effector-react';
+import React, {useCallback} from 'react';
 import {
-  FlatList,
   KeyboardAvoidingView,
-  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -21,22 +20,22 @@ import {$visibleTodos, todosAdd} from './store/todos';
 
 const Todos = () => {
   const todosCategories = useStore($todosCategories);
-  const visibleTodos = useStore($visibleTodos);
-
-  const flatRef = useRef<FlatList>(null);
 
   const onAddTodo = useCallback(() => {
     todosAdd({
       id: `${Math.random()}`,
-      title: '',
+      title: `${Math.random()}`,
       categories: todosCategories.filter(c => c),
       completed: false,
     });
   }, [todosCategories]);
 
+  const visibleTodos = useList($visibleTodos, (item, index) => {
+    return <Todo key={item.id} {...item} index={index} onFocus={() => {}} />;
+  });
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
+    <View style={styles.flex}>
       <TodosHeader />
       <View style={styles.filterContainer}>
         <Text style={styles.filterText}>Filter categories:</Text>
@@ -47,34 +46,18 @@ const Todos = () => {
           onRemove={todosCategoryRemove}
         />
       </View>
-      <View>
-        <FlatList
-          ref={flatRef}
-          data={visibleTodos}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            return (
-              <Todo
-                {...item}
-                index={index}
-                onFocus={() => {
-                  flatRef.current?.scrollToItem({
-                    item,
-                    animated: true,
-                    viewPosition: 0,
-                  });
-                }}
-              />
-            );
-          }}
-          ListHeaderComponent={<AddTodo onAdd={onAddTodo} />}
-        />
-      </View>
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView style={styles.flex}>
+        <ScrollView>
+          <AddTodo onAdd={onAddTodo} />
+          {visibleTodos}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  flex: {flex: 1},
   filterContainer: {},
   filterText: {fontSize: 18, color: '#000', paddingLeft: 10, paddingTop: 8},
 });
