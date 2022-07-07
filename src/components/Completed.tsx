@@ -10,7 +10,7 @@ const Completed = ({value, onChange}: Props) => {
       toValue: value ? 0.82 : 0,
       useNativeDriver: true,
     }).start();
-  }, [value]);
+  }, [scale, value]);
 
   return (
     <TouchableOpacity

@@ -29,7 +29,7 @@ const Todo = (props: Props) => {
       toValue: 0,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [translateX]);
 
   const onChange = useCallback(
     (todo: Partial<TodoProps>) => todosChange({...todo, id}),

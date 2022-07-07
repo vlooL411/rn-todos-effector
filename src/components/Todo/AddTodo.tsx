@@ -7,12 +7,15 @@ type Props = {onAdd: () => void};
 export const AddTodo = ({onAdd}: Props) => {
   const anim = useRef(new Animated.Value(1)).current;
 
-  const onAnim = useCallback((dir: boolean) => {
-    Animated.spring(anim, {
-      toValue: dir ? 1 : 0,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+  const onAnim = useCallback(
+    (dir: boolean) => {
+      Animated.spring(anim, {
+        toValue: dir ? 1 : 0,
+        useNativeDriver: true,
+      }).start();
+    },
+    [anim],
+  );
 
   const rotate = anim.interpolate({
     inputRange: [0, 1],

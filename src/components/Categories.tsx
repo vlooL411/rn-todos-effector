@@ -48,7 +48,7 @@ const Categories = ({
         </View>
       );
     });
-  }, [categories, onFocus]);
+  }, [categories, onChange, onFocus, onRemove, state]);
 
   return (
     <View style={styles.container}>

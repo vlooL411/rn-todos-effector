@@ -34,7 +34,7 @@ const useSwipe = (props: Props) => {
         else if (dx > -state.offset) state.onLeft();
       },
     });
-  }, []);
+  }, [state, translateSwipe]);
 
   return {translateSwipe, panHandlers: panResponder.panHandlers};
 };

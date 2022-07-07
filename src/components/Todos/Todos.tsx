@@ -1,12 +1,6 @@
 import {useStore} from 'effector-react';
 import React, {useCallback, useRef} from 'react';
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {FlatList, KeyboardAvoidingView, Platform, View} from 'react-native';
 import Categories from '../Categories';
 import Todo, {AddTodo} from '../Todo';
 import TodosHeader from './Header';
@@ -69,14 +63,5 @@ const Todos = () => {
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    flex: 1,
-    height: '100%',
-    flexDirection: 'column',
-  },
-});
 
 export default Todos;

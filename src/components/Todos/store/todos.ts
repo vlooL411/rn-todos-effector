@@ -29,9 +29,8 @@ export const $todos = createStore<TodoProps[]>([])
   })
   .on(todosInit, (_, todos) => todos);
 
-export const $visibilityFilter = createStore<
-  (todos: TodoProps[]) => TodoProps[]
->(todos => todos);
+type VisibilityFilter = (todos: TodoProps[]) => TodoProps[];
+export const $visibilityFilter = createStore<VisibilityFilter>(todos => todos);
 
 export const todosShow = createApi($visibilityFilter, {
   all: () => todos => {
