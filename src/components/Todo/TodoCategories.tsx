@@ -14,7 +14,6 @@ const TodoCategories = ({categories, onChange, onFocus}: Props) => {
     setCats(categories);
   }, [categories]);
 
-  console.log('rerender', cats);
   return (
     <Categories
       categories={cats}

@@ -1,6 +1,6 @@
 import {faPlusCircle, faXmarkCircle} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useMemo, useState} from 'react';
+import React, {createRef, RefObject, useMemo, useRef, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import useBlurKeyboardHide from '../hooks/useBlurKeyboardHide';
 
 type Props = {
   categories: string[];
@@ -25,17 +26,29 @@ const Categories = ({
   onFocus,
 }: Props) => {
   const [state] = useState({lastText: ''});
+  const inputsRef = useRef<RefObject<TextInput>[]>([]);
+
+  useBlurKeyboardHide({
+    onBlur: () => inputsRef.current.forEach(i => i.current?.blur()),
+  });
 
   const cats = useMemo(() => {
+    inputsRef.current = [];
     return categories.map((category, index) => {
+      const inputRef = createRef<TextInput>();
+      inputsRef.current.push(inputRef);
       return (
         <View key={`${index}-${category}`} style={styles.categoryContainer}>
           <TextInput
+            ref={inputRef}
             style={styles.category}
             numberOfLines={1}
             maxLength={30}
-            placeholder="enter category"
-            onFocus={onFocus}
+            placeholder="Enter category"
+            onFocus={() => {
+              state.lastText = category;
+              onFocus?.();
+            }}
             onChangeText={text => (state.lastText = text)}
             onBlur={() => {
               onChange(index, state.lastText, category);

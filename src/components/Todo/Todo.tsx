@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import useBlurKeyboardHide from '../../hooks/useBlurKeyboardHide';
 import useSwipe from '../../hooks/useSwipe';
 import Completed from '../Completed';
 import ModalYesNot from '../Modal/ModalYesNot';
@@ -23,6 +24,7 @@ const Todo = (props: Props) => {
 
   const {width} = useWindowDimensions();
   const translateX = useRef(new Animated.Value(-width)).current;
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     Animated.spring(translateX, {
@@ -35,6 +37,10 @@ const Todo = (props: Props) => {
     (todo: Partial<TodoProps>) => todosChange({...todo, id}),
     [id],
   );
+
+  useBlurKeyboardHide({
+    onBlur: () => inputRef.current?.blur(),
+  });
 
   const isCategories = categories.length != 0;
   const {panHandlers, translateSwipe} = useSwipe({
@@ -82,6 +88,7 @@ const Todo = (props: Props) => {
               onChange={value => onChange({completed: value})}
             />
             <TextInput
+              ref={inputRef}
               onFocus={onFocus}
               onChangeText={text => (state.lastTextTitle = text)}
               onBlur={() => onChange({title: state.lastTextTitle})}
