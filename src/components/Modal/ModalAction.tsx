@@ -8,7 +8,7 @@ type Props = {
   title: string;
   actions: {
     icon: IconDefinition;
-    title: string;
+    text: string;
     onPress: () => void;
     backgroundColor?: string;
   }[];
@@ -16,20 +16,20 @@ type Props = {
 const ModalAction = ({title, visible, actions}: Props) => {
   return (
     <Modal visible={visible} transparent animationType="slide">
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+      <View style={styles.container}>
+        <View style={styles.modal}>
           {!!title && <Text style={styles.title}>{title}</Text>}
-          {actions.map(({icon, onPress, title, backgroundColor}, i) => (
+          {actions.map(({icon, onPress, text, backgroundColor}, i) => (
             <TouchableOpacity
-              key={`${i}-${title}`}
+              key={`${i}-${text}`}
               onPress={onPress}
               style={[styles.button, styles.buttonClose, {backgroundColor}]}>
               <FontAwesomeIcon icon={icon} size={15} />
               <Text
-                style={styles.actionText}
+                style={styles.buttonText}
                 numberOfLines={2}
                 adjustsFontSizeToFit>
-                {title}
+                {text}
               </Text>
             </TouchableOpacity>
           ))}
@@ -42,13 +42,13 @@ const ModalAction = ({title, visible, actions}: Props) => {
 export default ModalAction;
 
 const styles = StyleSheet.create({
-  centeredView: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
   },
-  modalView: {
+  modal: {
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
@@ -63,6 +63,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  title: {
+    marginBottom: 25,
+    textAlign: 'center',
+    color: '#000',
+  },
   button: {
     minWidth: 100,
     justifyContent: 'center',
@@ -73,32 +78,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginVertical: 5,
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
   buttonClose: {
     backgroundColor: '#2196F3',
   },
-  title: {
-    marginBottom: 25,
-    textAlign: 'center',
-    color: '#000',
-  },
-  container: {
-    width: 150,
-    height: 100,
-    right: 0,
-    top: '100%',
-    backgroundColor: '#fff',
-    borderWidth: 2,
-    borderRadius: 5,
-    borderColor: 'gray',
-  },
-  action: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionText: {marginLeft: 4, fontSize: 15, color: '#000'},
+  buttonText: {marginLeft: 4, fontSize: 15, color: '#000'},
 });
