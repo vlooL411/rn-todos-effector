@@ -27,9 +27,11 @@ const useSwipe = (props: Props) => {
           useNativeDriver: true,
         }).start();
 
-        if (Math.abs(g.dx) < state.offset) return;
-        if (g.dx < state.offset) state.onRight();
-        else if (g.dx > -state.offset) state.onLeft();
+        const {dx} = g;
+
+        if (Math.abs(dx) < state.offset || Math.abs(dx) < 1) return;
+        if (dx < state.offset) state.onRight();
+        else if (dx > -state.offset) state.onLeft();
       },
     });
   }, []);

@@ -1,4 +1,4 @@
-import {faXmarkCircle} from '@fortawesome/free-solid-svg-icons';
+import {faPlusCircle, faXmarkCircle} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useMemo, useState} from 'react';
 import {
@@ -59,9 +59,17 @@ const Categories = ({
           Keyboard.dismiss();
           onAdd('');
         }}>
-        <Text style={[styles.category, styles.category_add]}>
-          {'Add Category'}
-        </Text>
+        {cats.length == 0 ? (
+          <Text style={[styles.category, styles.category_add]}>
+            {'Add Category'}
+          </Text>
+        ) : (
+          <FontAwesomeIcon
+            icon={faPlusCircle}
+            size={25}
+            color={styles.category_add.backgroundColor}
+          />
+        )}
       </TouchableOpacity>
     </View>
   );
