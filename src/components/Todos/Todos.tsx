@@ -1,4 +1,4 @@
-import {useList, useStore} from 'effector-react';
+import {useStore} from 'effector-react';
 import React, {useCallback} from 'react';
 import {
   KeyboardAvoidingView,
@@ -20,6 +20,7 @@ import {$visibleTodos, todosAdd} from './store/todos';
 
 const Todos = () => {
   const todosCategories = useStore($todosCategories);
+  const visibleTodos = useStore($visibleTodos);
 
   const onAddTodo = useCallback(() => {
     todosAdd({
@@ -29,10 +30,6 @@ const Todos = () => {
       completed: false,
     });
   }, [todosCategories]);
-
-  const visibleTodos = useList($visibleTodos, (item, index) => {
-    return <Todo {...item} index={index} onFocus={() => {}} />;
-  });
 
   return (
     <View style={styles.flex}>
@@ -49,7 +46,9 @@ const Todos = () => {
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView>
           <AddTodo onAdd={onAddTodo} />
-          {visibleTodos}
+          {visibleTodos.map((item, index) => (
+            <Todo key={item.id} {...item} index={index} onFocus={() => {}} />
+          ))}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
