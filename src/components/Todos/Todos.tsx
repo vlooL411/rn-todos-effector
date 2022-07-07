@@ -1,6 +1,13 @@
 import {useStore} from 'effector-react';
 import React, {useCallback, useRef} from 'react';
-import {FlatList, KeyboardAvoidingView, Platform, View} from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Categories from '../Categories';
 import Todo, {AddTodo} from '../Todo';
 import TodosHeader from './Header';
@@ -31,12 +38,15 @@ const Todos = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
       <TodosHeader />
-      <Categories
-        categories={todosCategories}
-        onChange={(index, category) => todosCategoryChange({index, category})}
-        onAdd={todosCategoryAdd}
-        onRemove={todosCategoryRemove}
-      />
+      <View style={styles.filterContainer}>
+        <Text style={styles.filterText}>Filter categories:</Text>
+        <Categories
+          categories={todosCategories}
+          onChange={(index, category) => todosCategoryChange({index, category})}
+          onAdd={todosCategoryAdd}
+          onRemove={todosCategoryRemove}
+        />
+      </View>
       <View>
         <FlatList
           ref={flatRef}
@@ -63,5 +73,10 @@ const Todos = () => {
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  filterContainer: {},
+  filterText: {fontSize: 18, color: '#000', paddingLeft: 10, paddingTop: 8},
+});
 
 export default Todos;
