@@ -15,8 +15,15 @@ type Props = {
   onChange: (index: number, value: string, prevValue: string) => void;
   onAdd: (category: string) => void;
   onRemove: (category: string) => void;
+  onFocus?: () => void;
 };
-const Categories = ({categories, onChange, onAdd, onRemove}: Props) => {
+const Categories = ({
+  categories,
+  onChange,
+  onAdd,
+  onRemove,
+  onFocus,
+}: Props) => {
   const [state] = useState({lastText: ''});
 
   const cats = useMemo(() => {
@@ -28,6 +35,7 @@ const Categories = ({categories, onChange, onAdd, onRemove}: Props) => {
             numberOfLines={1}
             maxLength={30}
             placeholder="enter category"
+            onFocus={onFocus}
             onChangeText={text => (state.lastText = text)}
             onBlur={() => {
               onChange(index, state.lastText, category);
@@ -40,7 +48,7 @@ const Categories = ({categories, onChange, onAdd, onRemove}: Props) => {
         </View>
       );
     });
-  }, [categories]);
+  }, [categories, onFocus]);
 
   return (
     <View style={styles.container}>

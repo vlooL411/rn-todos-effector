@@ -1,10 +1,11 @@
 import {useStore} from 'effector-react';
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  View,
 } from 'react-native';
 import Categories from '../Categories';
 import Todo, {AddTodo} from '../Todo';
@@ -21,6 +22,8 @@ const Todos = () => {
   const todosCategories = useStore($todosCategories);
   const visibleTodos = useStore($visibleTodos);
 
+  const flatRef = useRef<FlatList>(null);
+
   const onAddTodo = useCallback(() => {
     todosAdd({
       id: `${Math.random()}`,
@@ -32,8 +35,7 @@ const Todos = () => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      behavior={Platform.OS == 'ios' ? 'padding' : undefined}>
       <TodosHeader />
       <Categories
         categories={todosCategories}
@@ -41,20 +43,40 @@ const Todos = () => {
         onAdd={todosCategoryAdd}
         onRemove={todosCategoryRemove}
       />
-      <FlatList
-        data={visibleTodos}
-        keyExtractor={item => item.id}
-        renderItem={({item, index}) => {
-          return <Todo {...item} index={index} onPress={() => {}} />;
-        }}
-        ListHeaderComponent={<AddTodo onAdd={onAddTodo} />}
-      />
+      <View>
+        <FlatList
+          ref={flatRef}
+          data={visibleTodos}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => {
+            return (
+              <Todo
+                {...item}
+                index={index}
+                onFocus={() => {
+                  flatRef.current?.scrollToItem({
+                    item,
+                    animated: true,
+                    viewPosition: 0,
+                  });
+                }}
+              />
+            );
+          }}
+          ListHeaderComponent={<AddTodo onAdd={onAddTodo} />}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: '#fff', flex: 1, height: '100%'},
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+    height: '100%',
+    flexDirection: 'column',
+  },
 });
 
 export default Todos;

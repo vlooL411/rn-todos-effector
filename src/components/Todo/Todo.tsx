@@ -21,9 +21,9 @@ import TodoCategories from './TodoCategories';
 
 const SWIPE_WIDTH = 80;
 
-type Props = TodoProps & {index: number; onPress: () => void};
+type Props = TodoProps & {index: number; onFocus: () => void};
 const Todo = (props: Props) => {
-  const {id, index, completed, title, categories} = props;
+  const {id, index, completed, title, categories, onFocus} = props;
   const active = useStore($todoActive)?.id == id;
   const [state] = useState({lastTextTitle: title});
   const [requestRemove, setRequestRemove] = useState(false);
@@ -75,6 +75,7 @@ const Todo = (props: Props) => {
               onChange={value => onChange({completed: value})}
             />
             <TextInput
+              onFocus={onFocus}
               onChangeText={text => (state.lastTextTitle = text)}
               onBlur={() => onChange({title: state.lastTextTitle})}
               style={styles.title}
@@ -83,8 +84,13 @@ const Todo = (props: Props) => {
               {title}
             </TextInput>
           </View>
-          <TodoCategories categories={categories} onChange={onChange} />
         </Animated.View>
+
+        <TodoCategories
+          categories={categories}
+          onChange={onChange}
+          onFocus={onFocus}
+        />
       </Animated.View>
       {requestRemove && (
         <ModalYesNot
