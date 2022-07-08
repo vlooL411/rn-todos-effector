@@ -1,5 +1,5 @@
 import {useStore} from 'effector-react';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import Categories from '../Categories';
-import Todo, {AddTodo} from '../Todo';
+import {AddTodo} from '../Todo';
 import TodosHeader from './Header';
 import {
   $todosCategories,
@@ -16,21 +16,24 @@ import {
   todosCategoryChange,
   todosCategoryRemove,
 } from './store';
-import {todosAdd, todosChange, todosRemove} from './store/todos';
+import {todosAdd} from './store/todos';
 import {$visibleTodos} from './store/visibleTodos';
+import TodoStore from './TodoStore';
 
 const Todos = () => {
   const todosCategories = useStore($todosCategories);
   const visibleTodos = useStore($visibleTodos);
 
+  const [state] = useState({todosCategories});
+
   const onAddTodo = useCallback(() => {
     todosAdd({
       id: `${Math.random()}`,
       title: '',
-      categories: todosCategories.filter(c => c),
+      categories: state.todosCategories.filter(c => c),
       completed: false,
     });
-  }, [todosCategories]);
+  }, [state]);
 
   return (
     <View style={styles.flex}>
@@ -48,14 +51,7 @@ const Todos = () => {
         <ScrollView>
           <AddTodo onAdd={onAddTodo} />
           {visibleTodos.map((item, index) => (
-            <Todo
-              key={item.id}
-              {...item}
-              index={index}
-              onFocus={() => {}}
-              onChange={todoChange => todosChange({...todoChange, id: item.id})}
-              onRemove={() => todosRemove(item)}
-            />
+            <TodoStore key={item.id} index={index} {...item} />
           ))}
         </ScrollView>
       </KeyboardAvoidingView>
