@@ -11,14 +11,31 @@ import useBlurKeyboardHide from '../../hooks/useBlurKeyboardHide';
 import useSwipe from '../../hooks/useSwipe';
 import Completed from '../Completed';
 import ModalYesNot from '../Modal/ModalYesNot';
-import {TodoProps, todosChange, todosRemove} from '../Todos/store';
 import TodoCategories from './TodoCategories';
 
 const SWIPE_WIDTH = 120;
 
-type Props = TodoProps & {index: number; onFocus: () => void};
-const Todo = (props: Props) => {
-  const {id, index, completed, title, categories, onFocus} = props;
+type TodoProps = {
+  completed: boolean;
+  title: string;
+  categories: string[];
+};
+
+type Props = TodoProps & {
+  index: number;
+  onFocus: () => void;
+  onChange: (todo: Partial<TodoProps>) => void;
+  onRemove: () => void;
+};
+const Todo = ({
+  index,
+  completed,
+  title,
+  categories,
+  onFocus,
+  onChange,
+  onRemove,
+}: Props) => {
   const [state] = useState({lastTextTitle: title});
   const [requestRemove, setRequestRemove] = useState(false);
 
@@ -33,11 +50,6 @@ const Todo = (props: Props) => {
     }).start();
   }, [translateX]);
 
-  const onChange = useCallback(
-    (todo: Partial<TodoProps>) => todosChange({...todo, id}),
-    [id],
-  );
-
   useBlurKeyboardHide({
     onBlur: () => inputRef.current?.blur(),
   });
@@ -48,7 +60,7 @@ const Todo = (props: Props) => {
     onLeft: () => setRequestRemove(true),
     onRight: () => {
       if (isCategories) return;
-      todosChange({id, categories: [...categories, '']});
+      onChange({categories: [...categories, '']});
     },
   });
 
@@ -113,7 +125,7 @@ const Todo = (props: Props) => {
           title="Remove Todo"
           onYes={() => {
             setRequestRemove(false);
-            todosRemove(props);
+            onRemove();
           }}
           onNot={() => setRequestRemove(false)}
         />

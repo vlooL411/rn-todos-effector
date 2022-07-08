@@ -16,7 +16,8 @@ import {
   todosCategoryChange,
   todosCategoryRemove,
 } from './store';
-import {$visibleTodos, todosAdd} from './store/todos';
+import {todosAdd, todosChange, todosRemove} from './store/todos';
+import {$visibleTodos} from './store/visibleTodos';
 
 const Todos = () => {
   const todosCategories = useStore($todosCategories);
@@ -47,7 +48,14 @@ const Todos = () => {
         <ScrollView>
           <AddTodo onAdd={onAddTodo} />
           {visibleTodos.map((item, index) => (
-            <Todo key={item.id} {...item} index={index} onFocus={() => {}} />
+            <Todo
+              key={item.id}
+              {...item}
+              index={index}
+              onFocus={() => {}}
+              onChange={todoChange => todosChange({...todoChange, id: item.id})}
+              onRemove={() => todosRemove(item)}
+            />
           ))}
         </ScrollView>
       </KeyboardAvoidingView>
