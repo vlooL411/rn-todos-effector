@@ -25,7 +25,7 @@ type TodoProps = {
 
 type Props = TodoProps & {
   index: number;
-  onFocus: () => void;
+  onFocus?: () => void;
   onChange: (todo: Partial<TodoProps>) => void;
   onRemove: () => void;
 };
@@ -39,9 +39,11 @@ const Todo = ({
   onRemove,
 }: Props) => {
   const [state] = useState({lastTextTitle: title});
+  const [heightTodo, setHeightTodo] = useState(0);
   const [requestRemove, setRequestRemove] = useState(false);
 
   const {width} = useWindowDimensions();
+  const height = useRef(new Animated.Value(0)).current;
   const translateX = useRef(new Animated.Value(-width)).current;
   const inputRef = useRef<TextInput>(null);
 
@@ -73,26 +75,47 @@ const Todo = ({
     extrapolate: 'clamp',
   });
 
+  useEffect(() => {
+    Animated.timing(height, {
+      toValue: heightTodo,
+      useNativeDriver: false,
+      duration: 200,
+      easing: Easing.inOut(Easing.ease),
+    }).start();
+  }, [height, heightTodo]);
+
+  const removeAnim = useCallback(() => {
+    Animated.timing(height, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: false,
+    }).start(({finished}) => {
+      if (!finished) return;
+      onRemove();
+    });
+  }, [height, onRemove]);
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, {height}]}>
       <View style={styles.containerActions}>
         <FontAwesomeIcon icon={faTrash} size={25} color="#c33131" />
         <FontAwesomeIcon icon={faPlusCircle} size={25} color="#4ccb4c" />
       </View>
-      <View style={styles.addCategory}>
-        <Text
-          style={styles.addCategoryText}
-          numberOfLines={1}
-          adjustsFontSizeToFit>
-          Add Category
-        </Text>
-      </View>
       <Animated.View
+        style={[
+          styles.contentContainer,
+          styles.contentContainerRepeat,
+          {transform: [{translateX: translateXClamp}]},
+        ]}
+      />
+      <Animated.View
+        onLayout={e => setHeightTodo(e.nativeEvent.layout.height)}
         style={[
           styles.contentContainer,
           {transform: [{translateX: translateXClamp}]},
         ]}
         {...panHandlers}>
+        {index != 0 && <View style={styles.line} />}
         <Animated.View style={{transform: [{translateX}]}}>
           <View style={styles.titleContainer}>
             <Completed
@@ -125,17 +148,17 @@ const Todo = ({
           title="Remove Todo"
           onYes={() => {
             setRequestRemove(false);
-            onRemove();
+            removeAnim();
           }}
           onNot={() => setRequestRemove(false)}
         />
       )}
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {width: '100%'},
+  container: {width: '100%', overflow: 'hidden'},
   line: {
     backgroundColor: '#d7d7d7',
     height: 2,
@@ -143,7 +166,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignSelf: 'center',
   },
+  contentContainerRepeat: {height: '100%'},
   contentContainer: {
+    width: '100%',
+    position: 'absolute',
     backgroundColor: '#fff',
     paddingVertical: '.5%',
     paddingHorizontal: '2%',
