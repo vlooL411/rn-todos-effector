@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import Categories from '../Categories';
 import {TodoProps} from '../Todos/store';
 
@@ -7,7 +7,7 @@ type Props = {
   onChange: (todo: Pick<TodoProps, 'categories'>) => void;
   onFocus?: () => void;
 };
-const TodoCategories = ({categories, onChange, onFocus}: Props) => {
+const TodoCategories = memo(({categories, onChange, onFocus}: Props) => {
   const [cats, setCats] = useState(categories);
 
   useEffect(() => {
@@ -36,6 +36,6 @@ const TodoCategories = ({categories, onChange, onFocus}: Props) => {
       }
     />
   );
-};
+});
 
 export default TodoCategories;

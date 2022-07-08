@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import useBlurKeyboardHide from '../hooks/useBlurKeyboardHide';
 
-type Props = {
+export type CategoriesProps = {
   categories: string[];
   onChange: (index: number, value: string, prevValue: string) => void;
   onAdd: (category: string) => void;
@@ -24,7 +24,7 @@ const Categories = ({
   onAdd,
   onRemove,
   onFocus,
-}: Props) => {
+}: CategoriesProps) => {
   const [state] = useState({lastText: ''});
   const inputsRef = useRef<RefObject<TextInput>[]>([]);
 
@@ -74,7 +74,7 @@ const Categories = ({
         }}>
         {cats.length == 0 ? (
           <Text style={[styles.category, styles.category_add]}>
-            {'Add Category'}
+            Add Category
           </Text>
         ) : (
           <FontAwesomeIcon

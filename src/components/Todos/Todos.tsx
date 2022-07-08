@@ -35,6 +35,11 @@ const Todos = () => {
     });
   }, [state]);
 
+  const onChangeCategories = useCallback(
+    (index: number, category: string) => todosCategoryChange({index, category}),
+    [],
+  );
+
   return (
     <View style={styles.flex}>
       <TodosHeader />
@@ -42,7 +47,7 @@ const Todos = () => {
         <Text style={styles.filterText}>Filter categories:</Text>
         <Categories
           categories={todosCategories}
-          onChange={(index, category) => todosCategoryChange({index, category})}
+          onChange={onChangeCategories}
           onAdd={todosCategoryAdd}
           onRemove={todosCategoryRemove}
         />
