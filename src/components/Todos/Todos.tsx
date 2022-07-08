@@ -25,6 +25,7 @@ const Todos = () => {
   const visibleTodos = useStore($visibleTodos);
 
   const [state] = useState({todosCategories});
+  state.todosCategories = todosCategories;
 
   const onAddTodo = useCallback(() => {
     todosAdd({
