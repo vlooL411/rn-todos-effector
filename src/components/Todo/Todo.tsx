@@ -1,8 +1,10 @@
+import {faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Animated,
+  Easing,
   StyleSheet,
-  Text,
   TextInput,
   useWindowDimensions,
   View,
@@ -13,7 +15,7 @@ import Completed from '../Completed';
 import ModalYesNot from '../Modal/ModalYesNot';
 import TodoCategories from './TodoCategories';
 
-const SWIPE_WIDTH = 120;
+const SWIPE_WIDTH = 40;
 
 type TodoProps = {
   completed: boolean;
@@ -73,11 +75,9 @@ const Todo = ({
 
   return (
     <View style={styles.container}>
-      {index != 0 && <View style={styles.line} />}
-      <View style={styles.remove}>
-        <Text style={styles.removeText} numberOfLines={1} adjustsFontSizeToFit>
-          Remove
-        </Text>
+      <View style={styles.containerActions}>
+        <FontAwesomeIcon icon={faTrash} size={25} color="#c33131" />
+        <FontAwesomeIcon icon={faPlusCircle} size={25} color="#4ccb4c" />
       </View>
       <View style={styles.addCategory}>
         <Text
@@ -158,28 +158,14 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 6,
   },
-  remove: {
+  containerActions: {
     flex: 1,
-    position: 'absolute',
-    left: 10,
-    width: SWIPE_WIDTH - 16,
+    width: '100%',
     height: '100%',
-    justifyContent: 'center',
-  },
-  removeText: {color: 'red', fontSize: 22, fontWeight: '500'},
-  addCategory: {
-    flex: 1,
-    position: 'absolute',
-    right: 10,
-    width: SWIPE_WIDTH - 16,
-    height: '100%',
-    justifyContent: 'center',
-  },
-  addCategoryText: {
-    color: '#46e846',
-    fontSize: 22,
-    fontWeight: '500',
-    textAlign: 'right',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    flexDirection: 'row',
   },
 });
 
