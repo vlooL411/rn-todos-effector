@@ -1,6 +1,6 @@
 import {faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
@@ -95,12 +95,8 @@ const Todo = ({
     });
   }, [height, onRemove]);
 
-  return (
-    <Animated.View style={[styles.container, {height}]}>
-      <View style={styles.containerActions}>
-        <FontAwesomeIcon icon={faTrash} size={25} color="#c33131" />
-        <FontAwesomeIcon icon={faPlusCircle} size={25} color="#4ccb4c" />
-      </View>
+  const ContentFillBack = useMemo(() => {
+    return (
       <Animated.View
         style={[
           styles.contentContainer,
@@ -108,6 +104,45 @@ const Todo = ({
           {transform: [{translateX: translateXClamp}]},
         ]}
       />
+    );
+  }, [translateXClamp]);
+
+  const Content = useMemo(() => {
+    return (
+      <Animated.View style={{transform: [{translateX}]}}>
+        <View style={styles.titleContainer}>
+          <Completed
+            value={completed}
+            onChange={value => onChange({completed: value})}
+          />
+          <TextInput
+            ref={inputRef}
+            onFocus={onFocus}
+            onChangeText={text => (state.lastTextTitle = text)}
+            onBlur={() => onChange({title: state.lastTextTitle})}
+            style={styles.title}
+            placeholder="Title"
+            placeholderTextColor="#0000004b">
+            {title}
+          </TextInput>
+        </View>
+      </Animated.View>
+    );
+  }, [completed, onChange, onFocus, state, title, translateX]);
+
+  const Actions = useMemo(() => {
+    return (
+      <View style={styles.containerActions}>
+        <FontAwesomeIcon icon={faTrash} size={25} color="#c33131" />
+        <FontAwesomeIcon icon={faPlusCircle} size={25} color="#4ccb4c" />
+      </View>
+    );
+  }, []);
+
+  return (
+    <Animated.View style={[styles.container, {height}]}>
+      {Actions}
+      {ContentFillBack}
       <Animated.View
         onLayout={e => setHeightTodo(e.nativeEvent.layout.height)}
         style={[
@@ -116,25 +151,7 @@ const Todo = ({
         ]}
         {...panHandlers}>
         {index != 0 && <View style={styles.line} />}
-        <Animated.View style={{transform: [{translateX}]}}>
-          <View style={styles.titleContainer}>
-            <Completed
-              value={completed}
-              onChange={value => onChange({completed: value})}
-            />
-            <TextInput
-              ref={inputRef}
-              onFocus={onFocus}
-              onChangeText={text => (state.lastTextTitle = text)}
-              onBlur={() => onChange({title: state.lastTextTitle})}
-              style={styles.title}
-              placeholder="Title"
-              placeholderTextColor="#0000004b">
-              {title}
-            </TextInput>
-          </View>
-        </Animated.View>
-
+        {Content}
         {isCategories && (
           <TodoCategories
             categories={categories}

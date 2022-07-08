@@ -1,10 +1,10 @@
 import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useCallback, useRef} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import {Animated, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 type Props = {onAdd: () => void};
-export const AddTodo = ({onAdd}: Props) => {
+export const AddTodo = memo(({onAdd}: Props) => {
   const anim = useRef(new Animated.Value(1)).current;
 
   const onAnim = useCallback(
@@ -27,16 +27,13 @@ export const AddTodo = ({onAdd}: Props) => {
       onPress={onAdd}
       onPressOut={() => onAnim(false)}
       style={styles.container}>
-      <Animated.View
-        style={{
-          transform: [{rotate}],
-        }}>
+      <Animated.View style={{transform: [{rotate}]}}>
         <FontAwesomeIcon icon={faPlus} color={'#c65123'} size={16} />
       </Animated.View>
       <Text style={styles.text}>Add Todo</Text>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
