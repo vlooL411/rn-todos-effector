@@ -1,12 +1,15 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
-import TodosEffector from './components/Todos/TodosEffector';
+import {RecoilRoot} from 'recoil';
+import AppNavigation from './AppNavigation';
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <TodosEffector />
-    </SafeAreaView>
+    <RecoilRoot>
+      <SafeAreaView style={styles.container}>
+        <AppNavigation />
+      </SafeAreaView>
+    </RecoilRoot>
   );
 };
 
