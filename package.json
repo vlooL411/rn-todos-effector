@@ -23,7 +23,8 @@
     "effector-react": "^22.0.6",
     "react": "18.0.0",
     "react-native": "0.69.1",
-    "react-native-svg": "^12.3.0"
+    "react-native-svg": "^12.3.0",
+    "recoil": "^0.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

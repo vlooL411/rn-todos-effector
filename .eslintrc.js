@@ -16,6 +16,14 @@ module.exports = {
         'no-undef': 'off',
         curly: 'off',
         eqeqeq: 'off',
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': [
+          'warn',
+          {
+            additionalHooks:
+              '(useRecoilCallback|useRecoilTransaction_UNSTABLE)',
+          },
+        ],
       },
     },
   ],
