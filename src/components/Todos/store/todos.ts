@@ -1,8 +1,8 @@
 import {createEvent, createStore} from 'effector';
+import {TodoProps} from '../index.d';
 import {fetchTodosFromAsyncStorageFx, updateTodosInAsyncStorageFx} from './fx';
-import {TodoProps} from './index.d';
 
-export * from './index.d';
+export * from '.';
 
 const todosInit = createEvent<TodoProps[]>('init todos');
 export const todosAdd = createEvent<TodoProps>('add todo');

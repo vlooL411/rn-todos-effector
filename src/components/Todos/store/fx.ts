@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createEffect} from 'effector';
-import {TodoProps} from './index.d';
+import {TodoProps} from '../index.d';
 
 const keyAsyncTodos = 'todos';
 

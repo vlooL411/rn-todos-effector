@@ -1,29 +1,18 @@
-import {combine, createApi, createStore} from 'effector';
+import {createStore, sample} from 'effector';
+import {TodoProps} from '../index.d';
 import {$todosCategories} from './categories';
-import {TodoProps} from './index.d';
 import {$todos} from './todos';
 
-type VisibilityFilter = (todos: TodoProps[]) => TodoProps[];
-export const $visibilityFilter = createStore<VisibilityFilter>(todos => todos);
+export const $visibleTodos = createStore<TodoProps[]>([]);
 
-export const todosShow = createApi($visibilityFilter, {
-  all: () => todos => {
-    const todosCategories = $todosCategories.getState();
+sample({
+  clock: [$todosCategories, $todos],
+  source: {todos: $todos, todosCategories: $todosCategories},
+  fn: ({todos, todosCategories}) => {
     if (todosCategories.filter(c => c).length == 0) return todos;
     return todos.filter(
       ({categories}) => !!categories.find(c => todosCategories.includes(c)),
     );
   },
-  completed: () => todos => todos.filter(({completed}) => completed),
-  uncompleted: () => todos => todos.filter(({completed}) => !completed),
+  target: $visibleTodos,
 });
-
-$todosCategories.watch(() => {
-  todosShow.all();
-});
-
-export const $visibleTodos = combine(
-  $todos,
-  $visibilityFilter,
-  (todos, filter) => filter(todos),
-);
