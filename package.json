@@ -8,8 +8,11 @@
     "android:release": "react-native run-android --variant=release",
     "ios": "react-native run-ios",
     "test": "jest",
+    "tsc": "tsc",
+    "tsc:watch": "tsc --watch",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "assemble": "cd android && ./gradlew assembleRelease"
+    "android:assemble": "cd android && ./gradlew assembleRelease",
+    "android:clean": "cd android && ./gradlew clean"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
