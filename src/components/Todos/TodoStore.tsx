@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
 import Todo from '../Todo/Todo';
-import {TodoProps, todosChange, todosRemove} from './store';
+import {TodoProps} from './index.d';
+import {todosChange, todosRemove} from './store';
 
 const TodoStore = (props: TodoProps & {index: number}) => {
   const {id, index} = props;

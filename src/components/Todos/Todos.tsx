@@ -1,5 +1,4 @@
-import {useStore} from 'effector-react';
-import React, {useCallback, useState} from 'react';
+import React, {ReactElement} from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -7,57 +6,30 @@ import {
   Text,
   View,
 } from 'react-native';
-import Categories from '../Categories';
+import Categories, {CategoriesProps} from '../Categories';
 import {AddTodo} from '../Todo';
 import TodosHeader from './Header';
-import {
-  $todosCategories,
-  todosCategoryAdd,
-  todosCategoryChange,
-  todosCategoryRemove,
-} from './store';
-import {todosAdd} from './store/todos';
-import {$visibleTodos} from './store/visibleTodos';
-import TodoStore from './TodoStore';
+import {TodoProps} from './index.d';
 
-const Todos = () => {
-  const todosCategories = useStore($todosCategories);
-  const visibleTodos = useStore($visibleTodos);
-
-  const [state] = useState({todosCategories});
-  state.todosCategories = todosCategories;
-
-  const onAddTodo = useCallback(() => {
-    todosAdd({
-      id: `${Math.random()}`,
-      title: '',
-      categories: state.todosCategories.filter(c => c),
-      completed: false,
-    });
-  }, [state]);
-
-  const onChangeCategories = useCallback(
-    (index: number, category: string) => todosCategoryChange({index, category}),
-    [],
-  );
-
+type Props = {
+  todos: TodoProps[];
+  categories: CategoriesProps;
+  onAddTodo: () => void;
+  RenderTodo: (props: TodoProps & {index: number}) => ReactElement;
+};
+const Todos = ({todos, categories, onAddTodo, RenderTodo}: Props) => {
   return (
     <View style={styles.flex}>
       <TodosHeader />
       <View style={styles.filterContainer}>
         <Text style={styles.filterText}>Filter categories:</Text>
-        <Categories
-          categories={todosCategories}
-          onChange={onChangeCategories}
-          onAdd={todosCategoryAdd}
-          onRemove={todosCategoryRemove}
-        />
+        <Categories {...categories} />
       </View>
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView>
           <AddTodo onAdd={onAddTodo} />
-          {visibleTodos.map((item, index) => (
-            <TodoStore key={item.id} index={index} {...item} />
+          {todos.map((item, index) => (
+            <RenderTodo key={item.id} index={index} {...item} />
           ))}
         </ScrollView>
       </KeyboardAvoidingView>

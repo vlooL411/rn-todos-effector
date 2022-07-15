@@ -1,12 +1,11 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
-
-import Todos from './components/Todos';
+import TodosEffector from './components/Todos/TodosEffector';
 
 const App = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Todos />
+      <TodosEffector />
     </SafeAreaView>
   );
 };
